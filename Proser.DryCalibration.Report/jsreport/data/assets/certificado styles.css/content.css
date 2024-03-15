@@ -1,0 +1,140 @@
+.report-box {
+    max-width: 800px;
+    margin: auto;
+    padding: 30px;
+    border: 1px solid #eee;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+    font-size: 13px;
+    line-height: 24px;
+    font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+    color: #555;
+}
+.report-box table {
+    width: 100%;
+    line-height: inherit;
+    text-align: left;
+}
+.report-box table td {
+    padding: 5px;
+    vertical-align: top;
+}
+.report-box table tr td:nth-child(2) {
+    text-align: right;
+}
+.report-box table tr.top table td {
+    padding-bottom: 20px;
+}
+.report-box table tr.top table td.title {
+    font-size: 45px;
+    line-height: 45px;
+    color: #333;
+}
+.report-box table tr.information table td {
+    padding-bottom: 40px;
+}
+.report-box table tr.heading td {
+    background: #eee;
+    border-bottom: 1px solid #ddd;
+    font-weight: bold;
+}
+.report-box table tr.details td {
+    padding-bottom: 20px;
+}
+.report-box table tr.item td {
+    border-bottom: 1px solid #eee;
+}
+.report-box table tr.item.last td {
+    border-bottom: none;
+}
+.report-box table tr.total td:nth-child(2) {
+    border-top: 2px solid #eee;
+    font-weight: bold;
+}
+@media only screen and (max-width: 600px) {
+    .report-box table tr.top table td {
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+    .report-box table tr.information table td {
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+}
+
+
+
+
+
+.result-box {
+    margin: auto;
+    padding: 10px;
+    border: 1px solid #eee;
+    font-size: 13px;
+    line-height: 24px;
+    font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+    color: #555;
+}
+.result-box table {
+    width: 100%;
+    line-height: inherit;
+    text-align: left;
+}
+.result-box table td {
+    padding: 5px;
+    vertical-align: top;
+}
+.result-box table tr td:nth-child(2) {
+    text-align: right;
+}
+.result-box table tr.top table td {
+    padding-bottom: 20px;
+}
+.result-box table tr.top table td.title {
+    font-size: 45px;
+    line-height: 45px;
+    color: #333;
+}
+.result-box table tr.information table td {
+    padding-bottom: 40px;
+}
+.result-box table tr.heading td {
+    background: #eee;
+    border-bottom: 1px solid #ddd;
+    font-weight: bold;
+}
+.result-box table tr.details td {
+    padding-bottom: 20px;
+}
+.result-box table tr.item td {
+    border-bottom: 1px solid #eee;
+}
+.result-box table tr.item td .centre {
+    padding-right: 30px;
+    border-right: 1px solid #ddd;
+}
+
+.result-box table tr.item.last td {
+    border-bottom: none;
+}
+.result-box table tr.total td:nth-child(2) {
+    border-top: 2px solid #eee;
+    font-weight: bold;
+}
+
+
+@media only screen and (max-width: 600px) {
+    .result-box table tr.top table td {
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+    .result-box table tr.information table td {
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+}
+
+

@@ -1,0 +1,442 @@
+
+<style>
+    {#asset certificado styles.css @encoding=utf8}
+</style>
+
+<div class="report-box" style="height:980px;">
+    <table style="border-style: solid;border-width: 1px;">
+        <tr>
+            <td style="width:90px;"><img src="{#asset certificado inti.png @encoding=dataURI}" style="width:100%; max-width:80px;" /></td>
+            <td>
+                <!--<p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    SERVICIO ARGENTINO DE CALIBRACIÓN Y MEDICIÓN
+                </p>
+                <p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    LABORATORIO Nº 52
+                </p>-->
+                <p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    CERTIFICADO DE CALIBRACIÓN
+                </p>
+                <p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    Nº {{Header.CalibrationInformation.ReportNumber}}
+                </p>
+            </td>
+            <td style="width:80px;"><img src="{#asset certificado sac.png @encoding=dataURI}" style="width:100%; max-width:80px;" /></td>
+        </tr>
+        <tr><td colspan="3" style="font-size:12px; text-align:right; padding-right:10px;">Nº total de páginas del informe (5)</td></tr>
+    </table>
+
+
+    <!--<table style="width: 100%">
+        <tr><td style="font-size:12px; text-align:center; font-weight: bold;">Laboratorio de  calibración/medición supervisado por el Instituto Nacional de Tecnología Industrial </td></tr>
+    </table>-->
+
+
+    <table cellpadding="0" cellspacing="0">
+        <tr class="top">
+            <td colspan="2">
+                <table style="border-top : solid; border-bottom: solid; border-left:none; border-right: none; border-width: 1px;">
+                    <tr>
+                        <td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;color: #555; font-size:13px;">
+                            <img src="{#asset certificado logo.png @encoding=dataURI}" style="width:100%; max-width:400px;" />
+                        </td>
+                        <td style="font-size: 14px; text-align: left; padding-left:200px;">
+                            Teléfono: [5411] 4363.2300 | Interno: 104<br>
+                            Web: www.servaind.con <br> Correo: consultas@servaind.com.ar<br>
+                            Dirección: Av. Caseros 1735 | CP: C1152ABA <br> Buenos Aires | Argentina
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr class="information">
+            <td colspan="2">
+                <table style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;color: #555; font-size:13px; margin-top:-10px">
+                    <tr>
+                        <td>
+                            <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;color: #555; font-size:13.5px;">
+                                Este certificado de calibración/medición documenta la trazabilidad a los patrones nacionales, los cuales representan a las unidades físicas de medida en concordancia con el Sistema Internacional de Unidades (SI).
+                                <br>
+                                Este certificado no podrá ser reproducido total o parcialmente excepto cuando se haya obtenido previamente permiso por el laboratorio que lo emite. Certificados de calibración/medición sin firma y aclaración, no serán válidos.
+                                <br>
+                                El usuario es responsable de la recalibración del objeto a intervalos apropiados.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;color: #555; font-size:13px;">
+                                <tr>
+                                    <td>
+                                        <span style="color: blue;">Objeto: </span><br>
+                                        <span style="color: blue;">Marca | Fabricante: </span><br>
+                                        <span style="color: blue;">Modelo | DN | Sch | Serie: </span><br>
+                                        <span style="color: blue;">Número de serie | identificación:</span><br>
+                                        <span style="color: blue;">Versión de firmware: </span><br>
+                                        <span style="color: blue;">Determinaciones requeridas: </span><br>
+                                        <span style="color: blue;">Fecha de realización: </span><br>
+                                        <span style="color: blue;">Solicitante:</span><br>
+                                        <br>
+                                        <span style="color: blue;">Lugar de realización: </span><br>
+                                        <br>
+                                        <span style="color: blue;">Responsable del ensayo: </span><br>
+                                        <span style="color: blue;">Fecha de emisión:</span>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        <span>{{Header.CalibrationInformation.CalibrationObject}}</span><br>
+                                        <span>{{Header.Measurer.Brand}} | {{Header.Measurer.Maker}}</span><br>
+                                        <span>{{Header.Measurer.Model}} | {{Header.Measurer.DN}} | {{Header.Measurer.Sch}} | {{Header.Measurer.Serie}}</span><br>
+                                        <span>{{Header.Measurer.SerieNumber}} | {{Header.Measurer.Identification}}</span><br>
+                                        <span>{{Header.Measurer.FirmwareVersion}}</span><br>
+                                        <span>{{Header.CalibrationInformation.RequiredDetermination}}</span><br>
+                                        <span>{{Header.CalibrationInformation.CalibrationDate}}</span><br>
+                                        <span>{{Header.Petitioner.BusinessName}}</span><br>
+                                        <span>{{Header.Petitioner.BusinessAddress}}</span><br>
+                                        <span>{{Header.Petitioner.RealizationPlace}}</span><br>
+                                        <span>{{Header.Petitioner.RealizationAddress}}</span><br>
+                                        <span>{{Header.CalibrationInformation.Responsible}}</span><br>
+                                        <span>{{Header.CalibrationInformation.EmitionDate}}</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <div style="margin-top: -80px;">
+        <table style="font-size:13px;">
+            <tr>
+                <td>
+                    <div style="text-align: center;
+                         font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; color: #555;">
+                        <span style="font-size:13px;"></span><br>
+                        {{Header.CalibrationInformation.Responsible}}<br>
+                        ..............................<br>
+                        Director Técnico<br>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <p>
+        Los resultados contenidos en el presente certificado se refieren exclusivamente a los equipos o instrumentos sometidos<br>
+        a la calibración o medición, así como al momento y condiciones en que se realizaron las mediciones. El Laboratorio que<br>
+        lo emite no se responsabiliza de los perjuicios que puedan derivarse del uso inadecuado de este certificado.
+    </p>
+
+</div>
+
+<div class="report-box" style="height:985px; margin-top: 10px;">
+    <table style="border-style: solid;border-width: 1px;">
+        <tr>
+            <td style="width:90px;"><img src="{#asset certificado inti.png @encoding=dataURI}" style="width:100%; max-width:80px;" /></td>
+            <td>
+                <!--<p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    SERVICIO ARGENTINO DE CALIBRACIÓN Y MEDICIÓN
+                </p>
+                <p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    LABORATORIO Nº 52
+                </p>-->
+                <p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    CERTIFICADO DE CALIBRACIÓN
+                </p>
+                <p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    Nº {{Header.CalibrationInformation.ReportNumber}}
+                </p>
+            </td>
+            <td style="width:80px;"><img src="{#asset certificado sac.png @encoding=dataURI}" style="width:100%; max-width:80px;" /></td>
+        </tr>
+        <tr><td colspan="3" style="font-size:12px; text-align:right; padding-right:20px;">Página (2)</td></tr>
+    </table>
+    <br>
+    <span style="color: blue;">Metodo empleado:</span><br>
+    <p>
+        <span style="font-weight: bold;">
+            Verificacion de flujo cero:
+        </span>
+        Se realiza la medición de la velocidad del fluido indicada bajo condiciones de no circulación de gas a través del medidor ultrasónico para cada cuerda durante la prueba. La condición de caudal cero se considera a partir del cumplimiento de la condición de gradiente térmico del fluido dentro del cuerpo del medidor, medido entre dos o mas sensores de temperatura.
+    </p>
+    <p>
+        <span style="font-weight: bold;">
+            Verificación de la velocidad del sonido:
+        </span>
+        Se realiza la medición de la velocidad del sonido indicada para cada cuerda y se compara con la velocidad del sonido teórica del fluido de referencia que ocupa el espacio interno del cuerpo del medidor durante la prueba. El análisis de la composición del fluido se realiza a una presión y temperatura conocida basado en el Reporte AGA Nº 10 (Julio 3, 2002), Parte 1: Ecuación de estado detallada.<br>
+        Basado en el Reporte AGA Nº 9 Año 2017 Punto 4.6.3. y el procedimiento interno PO-198 <br>en su edición vigente.
+    </p>
+    <span style="color: blue;">Condiciones ambientales:</span><br>
+    <table style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+    color: #555; font-size:13px;">
+        <tr>
+            <td style="padding-left: 0px;">
+                Temperatura ambiente:<br>
+                Presión atmosférica:<br>
+            </td>
+            <td style="padding-right: 10px; text-align: left;">
+                ({{Header.EnvironmentalCondition.EnvironmentTemperature}} ± {{Header.EnvironmentalCondition.EnvironmentTempDifference}}) ºC<br>
+                ({{Header.EnvironmentalCondition.AtmosphericPressure}} ± 1) hPa<br>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <span style="color: blue;">Resultados:</span><br>
+    <span>Los valores obtenidos, se consignan a continuación:</span>
+    <table class="result-box">
+        <tr class="heading">
+            <td>Condiciones de ensayo:</td>
+            <td></td>
+            <td style="border-left: 1px solid #ddd;">Tolerancia:</td>
+        </tr>
+        <tr class="item">
+            <td>Fluido de referencia</td>
+            <td style="padding-right: 30px;">{{Body.CalibrationTerms.ReferenceFlow}}</td>
+            <td style="border-left: 1px solid #ddd;">-</td>
+        </tr>
+        <tr class="item">
+            <td>Temperatura promedio del fluido</td>
+            <td style="padding-right: 30px;">({{Body.CalibrationTerms.TemperatureAverage}} ± {{Body.CalibrationTerms.TemperatureUncertainty}}) ºC</td>
+            <td style="border-left: 1px solid #ddd;">-</td>
+        </tr>
+        <tr class="item">
+            <td>Presión promedio del fluido (pe)</td>
+            <td style="padding-right: 30px;">({{Body.CalibrationTerms.PressureAverage}} ± {{Body.CalibrationTerms.PressureAverageUncertainty}}) barA</td>
+            <td style="border-left: 1px solid #ddd;">10 barA < pe</td>
+        </tr>
+        <tr class="item">
+            <td>Gradiente térmico del fluido (t)</td>
+            <td style="padding-right: 30px;">{{Body.CalibrationTerms.TemperatureDifference}} ºC</td>
+            <td style="border-left: 1px solid #ddd;">Δt ≤ 0,30 ºC</td>
+        </tr>
+        <tr class="item">
+            <td>Duración ensayo (te)</td>
+            <td style="padding-right: 30px;">{{Body.CalibrationTerms.Duration}} s</td>
+            <td style="border-left: 1px solid #ddd;">30 s < te</td>
+        </tr>
+        <tr class="item">
+            <td>Porcentaje de pulsos por cuerda (ppa)</td>
+            <td style="padding-right: 30px;">{{Body.CalibrationTerms.EfficiencyAverage}} %</td>
+            <td style="border-left: 1px solid #ddd;">ppa = 100 %</td>
+        </tr>
+    </table>
+
+    <p>
+        Los resultados contenidos en el presente certificado se refieren exclusivamente a los equipos o instrumentos sometidos<br>
+        a la calibración o medición, así como al momento y condiciones en que se realizaron las mediciones. El Laboratorio que<br>
+        lo emite no se responsabiliza de los perjuicios que puedan derivarse del uso inadecuado de este certificado.
+    </p>
+
+</div>
+
+<div class="report-box" style="height:985px; margin-top:50px;">
+    <table style="border-style: solid;border-width: 1px;">
+        <tr>
+            <td style="width:90px;"><img src="{#asset certificado inti.png @encoding=dataURI}" style="width:100%; max-width:80px;" /></td>
+            <td>
+                <!--<p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    SERVICIO ARGENTINO DE CALIBRACIÓN Y MEDICIÓN
+                </p>
+                <p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    LABORATORIO Nº 52
+                </p>-->
+                <p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    CERTIFICADO DE CALIBRACIÓN
+                </p>
+                <p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    Nº {{Header.CalibrationInformation.ReportNumber}}
+                </p>
+            </td>
+            <td style="width:80px;"><img src="{#asset certificado sac.png @encoding=dataURI}" style="width:100%; max-width:80px;" /></td>
+        </tr>
+        <tr><td colspan="3" style="font-size:12px; text-align:right; padding-right:20px;">Página (3)</td></tr>
+    </table>
+
+    <br>
+
+    <table class="result-box">
+        <tr class="heading">
+            <td>Nivel de ganancia:</td>
+            <td></td>
+            <td style="border-left: 1px solid #ddd;">Tolerancia:</td>
+        </tr>
+
+        {{#each Body.GainResults.AverageResults}}
+        <tr class="item">
+            <td>Nivel de ganancia de la cuerda {{Name}}</td>
+            <td style="padding-right: 20px;">({{Value}} ± {{Uncertainty}}) dB</td>
+            <td style="border-left: 1px solid #ddd;vertical-align:middle;"> {{Min}} dB &lt; Gain &lt; {{Max}} dB</td>
+        </tr>
+        {{/each}}
+
+    </table>
+
+    <table class="result-box">
+        <tr class="heading">
+            <td>Velocidad del fluido a condición de flujo cero:</td>
+            <td></td>
+            <td style="border-left: 1px solid #ddd;">Tolerancia:</td>
+        </tr>
+
+        {{#each Body.FlowSpeedResults.AverageResults}}
+        <tr class="item">
+            <td>Velocidad del fluido promedio de la cuerda {{Name}}</td>
+            <td style="padding-right: 20px;">({{Value}} ± {{Uncertainty}}) m/s</td>
+            <td style="border-left: 1px solid #ddd;vertical-align:middle;">|v| < 0,006 m/s</td>
+        </tr>
+        {{/each}}
+
+    </table>
+    <br>
+    <p>
+        Los resultados contenidos en el presente certificado se refieren exclusivamente a los equipos o instrumentos sometidos<br>
+        a la calibración o medición, así como al momento y condiciones en que se realizaron las mediciones. El Laboratorio que<br>
+        lo emite no se responsabiliza de los perjuicios que puedan derivarse del uso inadecuado de este certificado.
+    </p>
+
+</div>
+
+<div class="report-box" style="height:985px; margin-top:50px;">
+    <table style="border-style: solid;border-width: 1px;">
+        <tr>
+            <td style="width:90px;"><img src="{#asset certificado inti.png @encoding=dataURI}" style="width:100%; max-width:80px;" /></td>
+            <td>
+                <!--<p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    SERVICIO ARGENTINO DE CALIBRACIÓN Y MEDICIÓN
+                </p>
+                <p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    LABORATORIO Nº 52
+                </p>-->
+                <p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    CERTIFICADO DE CALIBRACIÓN
+                </p>
+                <p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    Nº {{Header.CalibrationInformation.ReportNumber}}
+                </p>
+            </td>
+            <td style="width:80px;"><img src="{#asset certificado sac.png @encoding=dataURI}" style="width:100%; max-width:80px;" /></td>
+        </tr>
+        <tr><td colspan="3" style="font-size:12px; text-align:right; padding-right:20px;">Página (4)</td></tr>
+    </table>
+
+    <br>
+
+    <table class="result-box">
+        <tr class="heading">
+            <td>Velocidad del sonido (SOS):</td>
+            <td></td>
+            <td style="border-left: 1px solid #ddd;">Tolerancia:</td>
+        </tr>
+        <tr class="item">
+            <td>Velocidad del sonido teórica</td>
+            <td style="padding-right: 20px;"> {{Body.SoundSpeedResults.TheoreticalSoundSpeed}} m/s</td>
+            <td style="border-left: 1px solid #ddd;vertical-align:middle;">-</td>
+        </tr>
+        {{#each Body.SoundSpeedResults.AverageResults}}
+        <tr class="item">
+            <td>Velocidad del sonido promedio de la cuerda {{Name}}</td>
+            <td style="padding-right: 20px;">({{Value}} ± {{Uncertainty}}) m/s</td>
+            <td style="border-left: 1px solid #ddd;vertical-align:middle;">-</td>
+        </tr>
+        {{/each}}
+    </table>
+
+    <table class="result-box">
+        <tr class="heading">
+            <td>Error porcentual</td>
+            <td></td>
+            <td style="border-left: 1px solid #ddd;">Tolerancia:</td>
+        </tr>
+        {{#each Body.SoundSpeedResults.AverageResults}}
+        <tr class="item">
+            <td>Error porcentual de la cuerda {{Name}}</td>
+            <td style="padding-right: 20px;">{{Error}} %</td>
+            <td style="border-left: 1px solid #ddd;vertical-align:middle;">E% < 0,2 %</td>
+        </tr>
+        {{/each}}
+    </table>
+    <p>
+        Los resultados contenidos en el presente certificado se refieren exclusivamente a los equipos o instrumentos sometidos<br>
+        a la calibración o medición, así como al momento y condiciones en que se realizaron las mediciones. El Laboratorio que<br>
+        lo emite no se responsabiliza de los perjuicios que puedan derivarse del uso inadecuado de este certificado.
+    </p>
+</div>
+
+<div class="report-box" style="height:985px; margin-top:50px;">
+    <table style="border-style: solid;border-width: 1px;">
+        <tr>
+            <td style="width:90px;"><img src="{#asset certificado inti.png @encoding=dataURI}" style="width:100%; max-width:80px;" /></td>
+            <td>
+                <!--<p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    SERVICIO ARGENTINO DE CALIBRACIÓN Y MEDICIÓN
+                </p>
+                <p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    LABORATORIO Nº 52
+                </p>-->
+                <p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    CERTIFICADO DE CALIBRACIÓN
+                </p>
+                <p style="width:500px; text-align: center; padding-left:20px; padding-top: 2px;">
+                    Nº {{Header.CalibrationInformation.ReportNumber}}
+                </p>
+            </td>
+            <td style="width:80px;"><img src="{#asset certificado sac.png @encoding=dataURI}" style="width:100%; max-width:80px;" /></td>
+        </tr>
+        <tr><td colspan="3" style="font-size:12px; text-align:right; padding-right:20px;">Página (5)</td></tr>
+    </table>
+
+    <br>
+
+    <table class="result-box">
+        <tr class="heading">
+            <td>Máxima dispersión de la velocidad del sonido entre cuerdas:</td>
+            <td></td>
+            <td style="border-left: 1px solid #ddd;">Tolerancia:</td>
+        </tr>
+        <tr class="item">
+            <td>ΔSOSM ({{Body.SoundSpeedResults.SoundSpeedValMax}} m/s (max) - {{Body.SoundSpeedResults.SoundSpeedValMin}} m/s (min))</td>
+            <td style="padding-right: 20px;">{{ Body.SoundSpeedResults.SoundSpeedDifferece}} m/s</td>
+            <td style="border-left: 1px solid #ddd;">ΔSOSM < 0,5 m/s</td>
+        </tr>
+    </table>
+
+    <br>
+    <span style="color: blue;">Incertidumbre de medición:</span><br>
+    <p>
+        La incertidumbre expandida informada fue calculada multiplicando la incertidumbre estándar combinada por un factor de cubrimiento k=2, lo cual corresponde a un nivel aproximado de confianza del 95% para una distribución normal.
+    </p>
+    <span style="color: blue;">Observaciones:</span><br>
+    <p>
+        {{Body.CalibrationMeasuring.Observations}}
+    </p>
+    <p>
+        Las tolerancias informadas en el presente certificado se refieren al item bajo calibración en base a la norma de referencia utilizada. No deben considerarse ni hacerse extensivas para otras condiciones.
+    </p>
+    <span style="color: blue;">Equipos:</span><br>
+    <table class="result-box">
+        <tr class="heading">
+            <td>Patrones, instrumentos y equipos utilizados</td>
+            <td style="border-left: 1px solid #ddd; text-align: left;">Identificación interna</td>
+            <td style="border-left: 1px solid #ddd; text-align: left;">Código de calibración</td>
+        </tr>
+
+        {{#each Body.CalibrationMeasuring.MeasuringInstruments}}
+        <tr class="item">
+            <td>{{BrandName}}</td>
+            <td style="padding-right: 30px;text-align: left;border-left: 1px solid #ddd;">{{InternalIdentification}}</td>
+            <td style="border-left: 1px solid #ddd;">{{CalibrationCode}}</td>
+        </tr>
+        {{/each}}
+
+    </table>
+
+    <table><tr><td style="font-size:13px;">Fin del informe.</td></tr></table>
+
+    <p>
+        Los resultados contenidos en el presente certificado se refieren exclusivamente a los equipos o instrumentos sometidos<br>
+        a la calibración o medición, así como al momento y condiciones en que se realizaron las mediciones. El Laboratorio que<br>
+        lo emite no se responsabiliza de los perjuicios que puedan derivarse del uso inadecuado de este certificado.
+    </p>
+
+</div>

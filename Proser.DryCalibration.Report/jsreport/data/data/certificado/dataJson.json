@@ -1,0 +1,145 @@
+{
+  "Header": {
+    "Measurer": {
+      "BrandMaker": "Daniel",
+      "ModelDNSchSerie": "123456",
+      "SerieNumberIdentification": "123456789",
+      "FirmwareVersion": "2.333"
+    },
+    "Petitioner": {
+      "BusinessName": "Una Empresa",
+      "BusinessAddress": "Una dirección de Empresa",
+      "RealizationPlace": "Un lugar de realización",
+      "RealizationAddress": "Una dirección de realización"
+    },
+    "CalibrationInformation": {
+      "ReportNumber": "DC-19-0001-03",
+      "Responsible": "Un responsable del ensayo",
+      "CalibrationDate": "18/02/2019",
+      "EmitionDate": "18/02/2019",
+      "CalibrationObject": "Objeto de la calibración",
+      "RequiredDetermination": "Ensayo de verificación de flujo cero y velocidad de sonido"
+    },
+    "EnvironmentalCondition": {
+      "AtmosphericPressure": "1",
+      "EnvironmentTemperature": "22,002"
+    }
+  },
+  "Body": {
+    "CalibrationTerms": {
+      "ReferenceFlow": "Nitrogeno 5.0",
+      "TemperatureAverage": "22,56",
+      "PressureAverage": "1",
+      "TemperatureDifference": "0,03",
+      "EfficiencyAverage": "100",
+      "Duration": "500"
+    },
+    "FlowSpeedResults": {
+      "AverageResults": [
+        {
+          "Name": "A",
+          "Value": "0,005",
+          "Error": null
+        },
+        {
+          "Name": "B",
+          "Value": "0,005",
+          "Error": null
+        },
+        {
+          "Name": "C",
+          "Value": "0,005",
+          "Error": null
+        },
+        {
+          "Name": "D",
+          "Value": "0,005",
+          "Error": null
+        },
+        {
+          "Name": "E",
+          "Value": "0,005",
+          "Error": null
+        },
+        {
+          "Name": "F",
+          "Value": "0,005",
+          "Error": null
+        },
+        {
+          "Name": "G",
+          "Value": "0,005",
+          "Error": null
+        },
+        {
+          "Name": "H",
+          "Value": "0,005",
+          "Error": null
+        }
+      ]
+    },
+    "SoundSpeedResults": {
+      "AverageResults": [
+        {
+          "Name": "A",
+          "Value": "3,006",
+          "Error": "0,2"
+        },
+        {
+          "Name": "B",
+          "Value": "3,006",
+          "Error": "0,2"
+        },
+        {
+          "Name": "C",
+          "Value": "3,006",
+          "Error": "0,2"
+        },
+        {
+          "Name": "D",
+          "Value": "3,006",
+          "Error": "0,2"
+        },
+        {
+          "Name": "E",
+          "Value": "3,006",
+          "Error": "0,2"
+        },
+        {
+          "Name": "F",
+          "Value": "3,006",
+          "Error": "0,2"
+        },
+        {
+          "Name": "G",
+          "Value": "3,006",
+          "Error": "0,2"
+        },
+        {
+          "Name": "H",
+          "Value": "3,006",
+          "Error": "0,2"
+        }
+      ],
+      "TheoreticalSoundSpeed": "3,006",
+      "SoundSpeedValMax": "3,009",
+      "SoundSpeedValMin": "3,006",
+      "SoundSpeedDifferece": "0,003"
+    },
+    "CalibrationMeasuring": {
+      "MeasuringInstruments": [
+        {
+          "BrandName": "Equipo 1",
+          "InternalIdentification": "Descripción 1",
+          "CalibrationCode": "111111111111"
+        },
+        {
+          "BrandName": "Equipo 1",
+          "InternalIdentification": "Descripción 2",
+          "CalibrationCode": "222222222222"
+        }
+      ],
+      "Observations": "Nro. Serie 1, Nro Serie 2...."
+    }
+  }
+}

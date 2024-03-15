@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CC3B1F7A-4C66-4C2C-8CA9-D35EE57393E6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Proser.DryCalibration</RootNamespace>
+    <AssemblyName>Proser.DryCalibration</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Modbus, Version=3.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Modbus.dll</HintPath>
+    </Reference>
+    <Reference Include="NationalInstruments.Common, Version=17.5.40.49153, Culture=neutral, PublicKeyToken=dc6ad606294fc298, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\NationalInstruments.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NationalInstruments.DAQmx">
+      <HintPath>lib\NationalInstruments.DAQmx.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Proser.Common">
+      <HintPath>lib\Proser.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.113.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.113.3\lib\net451\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Unme.Common">
+      <HintPath>lib\Unme.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="aga10\Aga10Calc.cs" />
+    <Compile Include="controller\data\DataBase.cs" />
+    <Compile Include="controller\data\DataBaseLite.cs" />
+    <Compile Include="controller\data\DataController.cs" />
+    <Compile Include="controller\data\interfaces\IDataBase.cs" />
+    <Compile Include="controller\data\interfaces\IDataSql.cs" />
+    <Compile Include="controller\data\model\Calculation.cs" />
+    <Compile Include="controller\data\model\Customer.cs" />
+    <Compile Include="controller\data\model\Place.cs" />
+    <Compile Include="controller\data\model\Report.cs" />
+    <Compile Include="controller\data\model\EnvironmentCondition.cs" />
+    <Compile Include="controller\data\model\ReportEquipment.cs" />
+    <Compile Include="controller\data\model\ReportSample.cs" />
+    <Compile Include="controller\data\model\RopeError.cs" />
+    <Compile Include="controller\data\model\SampleTempDetail.cs" />
+    <Compile Include="controller\data\model\Responsible.cs" />
+    <Compile Include="controller\data\model\SampleCondition.cs" />
+    <Compile Include="controller\data\model\SampleRope.cs" />
+    <Compile Include="controller\data\model\Ultrasonic.cs" />
+    <Compile Include="controller\data\model\Uncertainty.cs" />
+    <Compile Include="controller\enums\UltSampMode.cs" />
+    <Compile Include="controller\interfaces\IController.cs" />
+    <Compile Include="controller\MonitorController.cs" />
+    <Compile Include="controller\pressure\PressureController.cs" />
+    <Compile Include="controller\rtd\RtdController.cs" />
+    <Compile Include="controller\ultrasonic\UltrasonicController.cs" />
+    <Compile Include="fsm\DryCalibrationProcess.cs" />
+    <Compile Include="fsm\enums\FSMState.cs" />
+    <Compile Include="fsm\enums\TimerControlState.cs" />
+    <Compile Include="fsm\interfaces\ITimerControl.cs" />
+    <Compile Include="fsm\states\ObtainingManualSampleState.cs" />
+    <Compile Include="log\Log.cs" />
+    <Compile Include="measuring\MeasuringConfiguration.cs" />
+    <Compile Include="measuring\MeasuringInstrument.cs" />
+    <Compile Include="monitor\enums\MonitorState.cs" />
+    <Compile Include="monitor\exceptions\MonitorInitializationException.cs" />
+    <Compile Include="fsm\exceptions\TimeOutProcessException.cs" />
+    <Compile Include="fsm\interfaces\IDryCalibrationProcess.cs" />
+    <Compile Include="fsm\interfaces\IState.cs" />
+    <Compile Include="fsm\states\EndingState.cs" />
+    <Compile Include="fsm\exceptions\FSMStateProcessException.cs" />
+    <Compile Include="fsm\states\GeneratingReportState.cs" />
+    <Compile Include="fsm\states\InitializingState.cs" />
+    <Compile Include="fsm\states\ObtainingSampleState.cs" />
+    <Compile Include="fsm\states\ReadyState.cs" />
+    <Compile Include="fsm\states\StabilizingState.cs" />
+    <Compile Include="fsm\states\ValidatingState.cs" />
+    <Compile Include="modules\interfaces\INIDaqModule.cs" />
+    <Compile Include="monitor\enums\MonitorType.cs" />
+    <Compile Include="monitor\exceptions\ModbusCheckSumException.cs" />
+    <Compile Include="monitor\interfaces\IMonitor.cs" />
+    <Compile Include="monitor\MonitorBase.cs" />
+    <Compile Include="monitor\PressureMonitor.cs" />
+    <Compile Include="monitor\RtdMonitor.cs" />
+    <Compile Include="monitor\statistic\StatisticValue.cs" />
+    <Compile Include="monitor\UltrasonicMonitor.cs" />
+    <Compile Include="modules\NIDaqModule.cs" />
+    <Compile Include="sensor\pressure\calibration\PressureCalibration.cs" />
+    <Compile Include="sensor\rtd\calibration\ResPoint.cs" />
+    <Compile Include="sensor\rtd\calibration\TempPoint.cs" />
+    <Compile Include="sensor\ultrasonic\enums\AddressPointFormat.cs" />
+    <Compile Include="sensor\ultrasonic\interfaces\IUltrasonicSensor.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\configuration\GainConfig.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\configuration\ModbusConfiguration.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\configuration\ModbusMapConfig.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\configuration\SlaveConfig.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\configuration\TcpConfig.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\enums\ModbusCommunication.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\enums\ModbusFrameFormat.cs" />
+    <Compile Include="sensor\ultrasonic\enums\UltrasonicModel.cs" />
+    <Compile Include="modules\NIDaqModuleBase.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="sensor\interfaces\ISensor.cs" />
+    <Compile Include="sensor\pressure\PressureSensor.cs" />
+    <Compile Include="sensor\rtd\calibration\RtdTable.cs" />
+    <Compile Include="sensor\rtd\calibration\RtdCalibration.cs" />
+    <Compile Include="sensor\rtd\Rtd.cs" />
+    <Compile Include="sensor\interfaces\IModbusSensor.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\interfaces\IModbusDevice.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\IO\SerialPortAdapter.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\maps\EfficiencyArg.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\maps\GainArg.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\maps\GainValue.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\maps\MapArg.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\maps\measurers\DanielJunior1RMeasurer.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\maps\measurers\DanielJunior2RMeasurer.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\maps\measurers\DanielMeasurer.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\maps\measurers\FMUMeasurer.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\maps\measurers\InstrometS5Measurer.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\maps\measurers\InstrometS6Measurer.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\maps\interfaces\IModBusMap.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\maps\measurers\KrohneAltV12Measurer.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\maps\measurers\SickMeasurer.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\maps\ModbusMap.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\maps\Rope.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\MasterDevice.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\ModbusDevice.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\configuration\SerialConfig.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\SlaveDevice.cs" />
+    <Compile Include="sensor\ultrasonic\modbus\maps\RopeValue.cs" />
+    <Compile Include="sensor\ultrasonic\UltrasonicSensor.cs" />
+    <Compile Include="util\DataStore.cs" />
+    <Compile Include="util\Utils.cs" />
+    <Compile Include="util\xml\Serializer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Proser.DryCalibration.Report\Proser.DryCalibration.Report.csproj">
+      <Project>{8713adf8-306f-4a64-97b9-22834e12f1b1}</Project>
+      <Name>Proser.DryCalibration.Report</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\log4net.dll" />
+    <Content Include="lib\Modbus.dll" />
+    <Content Include="lib\Modbus.Extensions.dll" />
+    <Content Include="lib\NationalInstruments.Common.dll" />
+    <Content Include="lib\NationalInstruments.Common.xml" />
+    <Content Include="lib\NationalInstruments.DAQmx.dll" />
+    <Content Include="lib\NationalInstruments.DAQmx.xml" />
+    <Content Include="lib\Proser.Common.dll" />
+    <Content Include="lib\Unme.Common.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="controller\data\data.db" />
+    <None Include="lib\NationalInstruments.Common.msl" />
+    <None Include="lib\NationalInstruments.DAQmx.msl" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="controller\data\model\enums\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.113.3\build\net451\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.113.3\build\net451\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.113.3\build\net451\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.113.3\build\net451\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
+  </Target>
+</Project>
