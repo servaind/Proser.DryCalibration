@@ -38,7 +38,7 @@ namespace Proser.DryCalibration.controller.ultrasonic
             UltrasonicModel = (UltrasonicModel)configuration.SlaveConfig.Model; // modelo del sensor ultrasónico
         }
 
-        protected override void initMonitor()
+        public override void initMonitor()
         {
 
             IModBusMap measurer = getMeasurerModel(configuration);
