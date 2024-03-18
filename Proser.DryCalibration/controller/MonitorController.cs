@@ -40,7 +40,7 @@ namespace Proser.DryCalibration.controller
             }
         }
 
-        protected virtual void initMonitor() { }
+        public virtual void initMonitor() { }
 
         protected void StatusMessage(string message)
         {
