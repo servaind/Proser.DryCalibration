@@ -42,7 +42,7 @@ namespace Proser.DryCalibration.App.mainapp
 
         protected DryCalibrationProcess dryCalProcess;
 
-        protected IController rtdController;
+        public IController rtdController;
         protected IController pressureController;
         protected IController ultrasonicController;
 
@@ -53,7 +53,7 @@ namespace Proser.DryCalibration.App.mainapp
         public ModbusConfiguration CurrentModbusConfiguration { get; private set; }
         public PressureCalibration CurrentPressureCalibration { get; private set; }
 
-        protected RTDValue RtdVal { get; private set; }
+        public RTDValue RtdVal { get; private set; }
         protected PressureValue PressureVal { get; private set; }
         public UltrasonicValue UltrasonicVal { get; private set; }
 
@@ -478,6 +478,7 @@ namespace Proser.DryCalibration.App.mainapp
         private static Mutex mutex = new Mutex();
         public void UpdateObtainedSampleLayout(int sampleNumber, UltrasonicModel ultrasonicModel, params TextBox[] sampleValues)
         {
+
             //mutex.WaitOne();
             Sample curretSample = new Sample();
             curretSample.Number = sampleNumber;
