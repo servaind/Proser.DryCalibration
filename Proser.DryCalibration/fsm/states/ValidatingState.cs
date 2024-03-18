@@ -296,6 +296,9 @@ namespace Proser.DryCalibration.fsm.states
 
         private ValResValue ValidateTemperature()
         {
+            var promedio = Averages.TemperatureDetail.Count();
+            Console.WriteLine(promedio);
+
             ValTempDifference resValue = new ValTempDifference()
             {
                 ValidationType = ValidationType.TempAVG,
@@ -304,6 +307,7 @@ namespace Proser.DryCalibration.fsm.states
                 //Success = Averages.CalibrationTemperature.Uncertainty <= TEMP_ERROR
                 TempDifference = Averages.CalibrationTemperature.Difference,
                 Success = Averages.CalibrationTemperature.Difference <= TEMP_ERROR
+
             };
            
             return resValue;
