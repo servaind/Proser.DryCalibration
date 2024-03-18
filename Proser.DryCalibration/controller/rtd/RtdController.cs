@@ -13,7 +13,7 @@ namespace Proser.DryCalibration.controller.rtd
             logFile = "Proser.Rtd.Monitor.log";
         }   
 
-        protected override void initMonitor()
+        public override void initMonitor()
         {
             string path = Path.Combine(Utils.ConfigurationPath, "RtdCalibration.xml");
             RtdTable calibration = RtdTable.Read(path);
