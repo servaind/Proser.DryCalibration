@@ -14,6 +14,8 @@ namespace Proser.DryCalibration.monitor
 {
     public class RtdMonitor : MonitorBase
     {
+        private Dictionary<int, double> var_errores = new Dictionary<int, double>();
+
         //rtds
         private const double VAR_ERROR = 0.3;
         //private const double VAR_ERROR = 0.375;  //debug
@@ -29,6 +31,14 @@ namespace Proser.DryCalibration.monitor
 
         public RtdMonitor(RtdTable calibration)
         {
+            var_errores.Add(6, 0.4);
+            var_errores.Add(7, 0.4);
+            var_errores.Add(8, 0.4);
+            var_errores.Add(9, 0.5);
+            var_errores.Add(10, 0.5);
+            var_errores.Add(11, 0.5);
+            var_errores.Add(12, 0.6);
+
             this.calibration = calibration;
             this.Type = enums.MonitorType.RTD;
             this.monitorValue = new RTDValue();
@@ -215,10 +225,12 @@ namespace Proser.DryCalibration.monitor
                     }
                 }
 
-                if (activeList.Count > 0)
+                if (activeList.Count > 5)
                 {
                     double maxDiff = tempDifferenceHist.Data.Max();
-                    monitorValue.IsStable = maxDiff < VAR_ERROR;
+                    //monitorValue.IsStable = maxDiff < VAR_ERROR;
+                    var valorError = var_errores[activeList.Count()];
+                    monitorValue.IsStable = maxDiff < valorError;
 
                     if (monitorValue.IsStable)
                     {
