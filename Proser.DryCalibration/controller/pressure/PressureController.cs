@@ -18,7 +18,7 @@ namespace Proser.DryCalibration.controller.pressure
             logFile = "Proser.Pressure.Monitor.log";
         }
 
-        protected override void initMonitor()
+        public override void initMonitor()
         {
             string path = Path.Combine(Utils.ConfigurationPath, "PressureCalibration.xml");
 
