@@ -21,6 +21,7 @@ using System.IO;
 using Proser.DryCalibration.fsm.exceptions;
 using Proser.DryCalibration.util;
 using Proser.DryCalibration.controller.enums;
+using Proser.DryCalibration.controller.rtd;
 
 namespace Proser.DryCalibration.App
 {
@@ -2288,8 +2289,6 @@ namespace Proser.DryCalibration.App
 
         private void UpdateSampleValues(int sampleNumber, UltrasonicModel ultrasonicModel) 
         {
-     
-            log.Log.WriteIfExists("UpdateSampleValues -> Model: " + ultrasonicModel.ToString());
 
             if (sampleNumber == 1) 
             {
@@ -2297,16 +2296,13 @@ namespace Proser.DryCalibration.App
 
                 SetDefaultGainValues(ultrasonicModel); 
             }
-
-   
-
+         
             switch (ultrasonicModel)
             {
                 case UltrasonicModel.Daniel:
                     switch (sampleNumber)
                     {
                         case 1:
-                            log.Log.WriteIfExists("UpdateObtainedSampleLayout -> Model: " + ultrasonicModel.ToString());
                             dryCalibration.UpdateObtainedSampleLayout(sampleNumber,
                                 ultrasonicModel,
                                 ObtSampTemp1,
@@ -2411,7 +2407,6 @@ namespace Proser.DryCalibration.App
                     switch (sampleNumber)
                     {
                         case 1:
-                            log.Log.WriteIfExists("UpdateObtainedSampleLayout -> Model: " + ultrasonicModel.ToString());
                             dryCalibration.UpdateObtainedSampleLayout(sampleNumber,
                                 ultrasonicModel,
                                 ObtSampTemp1,
@@ -2517,7 +2512,6 @@ namespace Proser.DryCalibration.App
                     switch (sampleNumber)
                     {
                         case 1:
-                            log.Log.WriteIfExists("UpdateObtainedSampleLayout -> Model: " + ultrasonicModel.ToString());
                             dryCalibration.UpdateObtainedSampleLayout(sampleNumber,
                                 ultrasonicModel,
                                 ObtSampTemp1,
@@ -4365,8 +4359,6 @@ namespace Proser.DryCalibration.App
 
         private void DryCalibration_UpdateSensorReceived(MonitorType type, object value)
         {
-            //log.Log.WriteIfExists("DryCalibration_UpdateSensorReceived... Value: " + value.ToString() + ", Type: " + type.ToString());
-
             switch (type)
             {
                 case MonitorType.RTD:
@@ -4449,6 +4441,39 @@ namespace Proser.DryCalibration.App
 
         private void DryCalibration_ElapsedTimeControl(string timeElapsed)
         {
+            if (dryCalibration.RtdVal != null)
+            {
+                //dryCalibrationPro
+                //this.ExecuteNextState(FSMState.STABILIZING);
+
+
+                ////MessageBox.Show("Temperatura Estable...:" + (dryCalibration.RtdVal.IsStable ? "Si" : "No"));
+                ////TODO: definir que hacer si la temperatura no está estable
+                //if (!dryCalibration.RtdVal.IsStable)
+                //{
+                //    //RefreshState?.Invoke("Temperatura fuera de rango.");
+                //    Status.Text = "Temperatura fuera de rango.";
+                //}
+                //else
+                //{
+                //    Status.Text = "";
+                //}
+
+                //if (!dryCalibration.RtdVal.IsStable)
+                //{
+                //    dryCalibration.InitDryCalibration();
+
+                //    //dryCalibration.InitTimerControl();
+                //    //dryCalibration.rtdController.Initialize();
+                //}
+
+
+                if (!dryCalibration.RtdVal.IsStable)
+                {
+                    dryCalibration.InitDryCalibration();
+                }
+            }
+
             SetTextBlock(TimeElapsed, timeElapsed);
             TimeElapsed.Refresh();
         }
