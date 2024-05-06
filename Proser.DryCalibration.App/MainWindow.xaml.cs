@@ -31,6 +31,8 @@ namespace Proser.DryCalibration.App
         private bool saveRTDAdjustament;
         private bool savePressAdjustament;
         private FSMState currenState;
+        private bool cancelar;
+
 
         public MainWindow()
         {
@@ -978,42 +980,66 @@ namespace Proser.DryCalibration.App
             dryCalibration.InitDryCalibrationValidation();
         }
 
-        private void BtnNextManSample_Click(object sender, RoutedEventArgs e)
-        {            
-
-            ((ObtainingManualSampleState)dryCalibration.CurrentState).InitTimerControl();
-
-            dryCalibration.SetControlEnabled(btnNextManSample, false);
-
-            int sampleNumber = ((ObtainingManualSampleState)dryCalibration.CurrentState).SampleNumber;
-            UltrasonicModel ultrasonicModel = (UltrasonicModel)dryCalibration.CurrentModbusConfiguration.SlaveConfig.Model;
-
-            if (sampleNumber == 10) { 
-
-                ((ObtainingManualSampleState)dryCalibration.CurrentState).SampleNumber = 11; 
-
-                SetSampleModeEdition(sampleNumber, ultrasonicModel, true);
-
-                UpdateSampleValuesFromSampleLayout(sampleNumber, ultrasonicModel);
-
-                ((ObtainingManualSampleState)dryCalibration.CurrentState).CalculateManualAverages();
-
-                UpdateSampleValues(11, ultrasonicModel);
-
-                ((ObtainingManualSampleState)dryCalibration.CurrentState).FinishProcess();
-
-                dryCalibration.SetControlVisibility(btnNextManSample, Visibility.Hidden);     
-            }
-            else 
+        private bool VerificarSiCancelar()
+        {
+            cancelar = false;
+            if (dryCalibration.RtdVal != null)
             {
-
-                SetSampleModeEdition(sampleNumber, ultrasonicModel, true);
-
-                UpdateSampleValuesFromSampleLayout(sampleNumber, ultrasonicModel);
-
-                dryCalibration.StartTimerControl();
+                if (!dryCalibration.RtdVal.IsStable)
+                {
+                    cancelar = true;
+                }
             }
-       
+
+            if (cancelar)
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() => CancelDryCalibration(true)));
+                return true;
+            }
+            return false;
+        }
+
+
+        private void BtnNextManSample_Click(object sender, RoutedEventArgs e)
+        {
+            if (!VerificarSiCancelar())
+            {
+                ((ObtainingManualSampleState)dryCalibration.CurrentState).InitTimerControl();
+
+                dryCalibration.SetControlEnabled(btnNextManSample, false);
+
+                int sampleNumber = ((ObtainingManualSampleState)dryCalibration.CurrentState).SampleNumber;
+                UltrasonicModel ultrasonicModel = (UltrasonicModel)dryCalibration.CurrentModbusConfiguration.SlaveConfig.Model;
+
+                if (sampleNumber == 10)
+                {
+
+                    ((ObtainingManualSampleState)dryCalibration.CurrentState).SampleNumber = 11;
+
+                    SetSampleModeEdition(sampleNumber, ultrasonicModel, true);
+
+                    UpdateSampleValuesFromSampleLayout(sampleNumber, ultrasonicModel);
+
+                    ((ObtainingManualSampleState)dryCalibration.CurrentState).CalculateManualAverages();
+
+                    UpdateSampleValues(11, ultrasonicModel);
+
+                    ((ObtainingManualSampleState)dryCalibration.CurrentState).FinishProcess();
+
+                    dryCalibration.SetControlVisibility(btnNextManSample, Visibility.Hidden);
+                }
+                else
+                {
+
+                    SetSampleModeEdition(sampleNumber, ultrasonicModel, true);
+
+                    UpdateSampleValuesFromSampleLayout(sampleNumber, ultrasonicModel);
+
+                    dryCalibration.StartTimerControl();
+                }
+
+            }
+
         }
 
         private void BtnValidStateNext_Click(object sender, RoutedEventArgs e)
@@ -2275,6 +2301,7 @@ namespace Proser.DryCalibration.App
                 }
                 else
                 {
+                    SetSampleModeEdition(sampleNumber, ultrasonicModel, true);
                     UpdateSampleValues(sampleNumber, ultrasonicModel);
                 }
                        
@@ -4333,7 +4360,7 @@ namespace Proser.DryCalibration.App
             dryCalibration.Initialize();
         }
 
-        private void CancelDryCalibration()
+        private void CancelDryCalibration(bool tomaMuestrasAbortada = false)
         {
             GridConfigurationUser.Visibility = Visibility.Hidden;
             GrigConfigurationDevice.Visibility = Visibility.Hidden;
@@ -4354,7 +4381,7 @@ namespace Proser.DryCalibration.App
 
             CleanAllStates();
 
-            SetTextBlock(Status, "Listo.");
+            SetTextBlock(Status, (tomaMuestrasAbortada ? "Ensayo Cancelado por Inestabilidad Térmica." : "Listo."));
         }
 
         private void DryCalibration_UpdateSensorReceived(MonitorType type, object value)
@@ -4374,8 +4401,8 @@ namespace Proser.DryCalibration.App
                     if (currenState == FSMState.INITIALIZED)
                     {
                         dryCalibration.UpdateRTDLayout(stateStabRtd1, stateStabRtd2, stateStabRtd3, stateStabRtd4,
-                          stateStabRtd5, stateStabRtd6, stateStabRtd7, stateStabRtd8, stateStabRtd9, stateStabRtd10, stateStabRtd11,
-                          stateStabRtd12, stateStabRtdAVG, stateStabRtdDifference);
+                            stateStabRtd5, stateStabRtd6, stateStabRtd7, stateStabRtd8, stateStabRtd9, stateStabRtd10, stateStabRtd11,
+                            stateStabRtd12, stateStabRtdAVG, stateStabRtdDifference);
 
                         break;
                     }
@@ -4385,13 +4412,23 @@ namespace Proser.DryCalibration.App
                         if (currenState == FSMState.STABILIZING)
                         {
                             dryCalibration.UpdateRTDLayout(stateStabRtd1, stateStabRtd2, stateStabRtd3, stateStabRtd4,
-                           stateStabRtd5, stateStabRtd6, stateStabRtd7, stateStabRtd8, stateStabRtd9, stateStabRtd10, stateStabRtd11,
-                           stateStabRtd12, stateStabRtdAVG, stateStabRtdDifference);
+                            stateStabRtd5, stateStabRtd6, stateStabRtd7, stateStabRtd8, stateStabRtd9, stateStabRtd10, stateStabRtd11,
+                            stateStabRtd12, stateStabRtdAVG, stateStabRtdDifference);
                         }
 
                         if (currenState == FSMState.OBTAINING_SAMPLES)
                         {
-                            dryCalibration.UpdateObtainedSampleRTDDiffLayout(ObtSampRtdAVG, ObtSampRtdDifference);
+                            if (dryCalibration.CurrentModbusConfiguration.UltrasonicSampleMode == (int)UltSampMode.Automatic)
+                            {
+                                if (!VerificarSiCancelar())
+                                {
+                                    dryCalibration.UpdateObtainedSampleRTDDiffLayout(ObtSampRtdAVG, ObtSampRtdDifference);
+                                }
+                            }
+                            else
+                            {
+                                dryCalibration.UpdateObtainedSampleRTDDiffLayout(ObtSampRtdAVG, ObtSampRtdDifference);
+                            }
                         }
                     }
 
@@ -4414,7 +4451,7 @@ namespace Proser.DryCalibration.App
                     break;
                 default:
                     break;
-            }          
+            }
         }
       
         private void DryCalibration_StatisticReceived(MonitorType type, StatisticValue value)
@@ -4441,41 +4478,10 @@ namespace Proser.DryCalibration.App
 
         private void DryCalibration_ElapsedTimeControl(string timeElapsed)
         {
-            if (dryCalibration.RtdVal != null)
-            {
-                //dryCalibrationPro
-                //this.ExecuteNextState(FSMState.STABILIZING);
-
-
-                ////MessageBox.Show("Temperatura Estable...:" + (dryCalibration.RtdVal.IsStable ? "Si" : "No"));
-                ////TODO: definir que hacer si la temperatura no está estable
-                //if (!dryCalibration.RtdVal.IsStable)
-                //{
-                //    //RefreshState?.Invoke("Temperatura fuera de rango.");
-                //    Status.Text = "Temperatura fuera de rango.";
-                //}
-                //else
-                //{
-                //    Status.Text = "";
-                //}
-
-                //if (!dryCalibration.RtdVal.IsStable)
-                //{
-                //    dryCalibration.InitDryCalibration();
-
-                //    //dryCalibration.InitTimerControl();
-                //    //dryCalibration.rtdController.Initialize();
-                //}
-
-
-                if (!dryCalibration.RtdVal.IsStable)
-                {
-                    dryCalibration.InitDryCalibration();
-                }
-            }
 
             SetTextBlock(TimeElapsed, timeElapsed);
             TimeElapsed.Refresh();
+
         }
 
         private void StateStabRTDActiveCheck_Change(object sender, RoutedEventArgs e)

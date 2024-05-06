@@ -69,8 +69,9 @@ namespace Proser.DryCalibration.sensor.ultrasonic.modbus.configuration
 
                 return fullPath;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return "";
             }
         }
