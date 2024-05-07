@@ -2301,8 +2301,11 @@ namespace Proser.DryCalibration.App
                 }
                 else
                 {
-                    SetSampleModeEdition(sampleNumber, ultrasonicModel, true);
-                    UpdateSampleValues(sampleNumber, ultrasonicModel);
+                    if (sampleNumber <= 10)
+                    {
+                        SetSampleModeEdition(sampleNumber, ultrasonicModel, true);
+                        UpdateSampleValues(sampleNumber, ultrasonicModel);
+                    }
                 }
                        
             }
