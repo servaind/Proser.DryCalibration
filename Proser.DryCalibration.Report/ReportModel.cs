@@ -96,7 +96,8 @@ namespace Proser.DryCalibration.Report
         public string PressureAverageUncertainty { get; set; }
         public string PressureSensorType { get; set; }
         public string TemperatureUncertainty { get; set; }
-        public string TemperatureDifference { get; set; }      
+        public string TemperatureDifference { get; set; }
+        public string Gradiente { get; set; }
         public string EfficiencyAverage { get; set; }
         public string Duration { get; set; }
         

@@ -93,8 +93,9 @@ namespace Proser.DryCalibration.sensor.rtd.calibration
 
                 return fullPath;
             }
-            catch
+            catch (Exception ex)
             {
+                throw ex;
                 return "";
             }
         }

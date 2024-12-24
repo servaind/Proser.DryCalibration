@@ -15,6 +15,7 @@ namespace Proser.DryCalibration.fsm.states
     public class GeneratingReportState : IState
     {
         private const string REFERENCE_FLOW = "Nitrogeno 5.0";
+        private readonly double UP_PRESS;
 
         public event ExitStateHandler ExitState;
         public event Action<string> RefreshState;
@@ -23,7 +24,9 @@ namespace Proser.DryCalibration.fsm.states
         private ReportModel report;
         private ValidatedResult validatedResults;
         private Sample averages;
+        private List<Sample> samples;
         private bool ContinueToNextState;
+        private string _gradiente;
 
         public CancellationTokenSource token { get; private set; }
         public FSMState Name { get; private set; }
@@ -32,8 +35,10 @@ namespace Proser.DryCalibration.fsm.states
 
         private UltrasonicModel ultrasonicModel;
 
-        public GeneratingReportState( ReportModel reportModel, ValidatedResult validatedResults, Sample averages, UltrasonicModel ultrasonicModel)
+        public GeneratingReportState( ReportModel reportModel, ValidatedResult validatedResults, Sample averages, UltrasonicModel ultrasonicModel, double up_press, string gradiente, List<Sample> samples)
         {
+            _gradiente = gradiente;
+            UP_PRESS = up_press;
             this.validatedResults = validatedResults;
             this.averages = averages;
             this.report = reportModel;
@@ -42,6 +47,7 @@ namespace Proser.DryCalibration.fsm.states
             this.Description = "Ingrese los datos requeridos para continuar con el ensayo.";
             this.ReportPath = Utils.GetReportPath();
             this.ultrasonicModel = ultrasonicModel;
+            this.samples = samples;
         }
 
         public void Execute()
@@ -85,6 +91,7 @@ namespace Proser.DryCalibration.fsm.states
                     TemperatureAverage = Utils.DecimalComplete(averages.CalibrationTemperature.Value, 2),
                     TemperatureUncertainty = Utils.DecimalComplete(averages.CalibrationTemperature.Uncertainty, 2),
                     TemperatureDifference = Utils.DecimalComplete(averages.CalibrationTemperature.Difference, 2),
+                    Gradiente = _gradiente,
                     ReferenceFlow = REFERENCE_FLOW,
                 };
 
@@ -134,14 +141,55 @@ namespace Proser.DryCalibration.fsm.states
 
                 // velocidades de sonido
                 List<RopeResult> soundReportResults = new List<RopeResult>();
-                percentErrResults.ForEach(v => soundReportResults.Add(new RopeResult()
+
+                foreach (var v in percentErrResults)
                 {
-                    Name = v.Name,
-                    Value = Utils.DecimalComplete(v.Value, 3),
-                    Uncertainty = Utils.DecimalComplete(Utils.CalculateUncertainty(averages.Ropes.Find(f => f.Name == v.Name).DeviationSoundSpeed,
-                        (1d / 100d), 10, 0, (1d / 10d)), 3),
-                    Error = Utils.DecimalComplete(v.PercentError, 3)
-                }));
+                    //var rtdCount = averages.TemperatureDetail.Count;
+                    var sampleCount = samples.Count;
+                    var rtdCount = samples[0].TemperatureDetail.Count(y => y.TempValue != 0) - 2;
+
+                    var countN = samples.Count * rtdCount;
+                    var averageTemp = averages.CalibrationTemperature.Value;
+                    var uncertaintyCertTemp = Utils.CalculateUncertaintyUP(rtdCount);
+                    var utSOS = Math.Sqrt(8.317 * 1.41 / 0.028014) * 0.5 * (1 / Math.Sqrt(273 + averageTemp));
+                    var uncertaintyCertPres = UP_PRESS;
+                    var presatm = Convert.ToDouble(report.Header.EnvironmentalCondition.AtmosphericPressure);
+                    var pabs = (averages.PressureValue * 100000) + (presatm /1000 * 100000);
+                    //var utSOS = Math.Sqrt(8.317 * 1.41 / 0.028014) * 0.5 * (1 / Math.Sqrt(273 + averageTemp));
+                    //var utSOS = Math.Sqrt(8.317 * 1.41 / 0.028014) * 0.5 * (1 / Math.Sqrt(273 + averageTemp));
+                    var x = averageTemp;
+                    var densidad = 0.028014 * pabs / (8.317 * (x + 273));
+                    var upSOS = Math.Sqrt(1.41 / densidad) * (1 / Math.Sqrt(pabs)) * 0.5;
+
+                    //var uptSOS = Math.Sqrt(Math.Pow(utSOS * uncertaintyCertTemp, 2) + Math.Pow(upSOS * uncertaintyCertPres, 2)
+                    //    + Math.Pow(averages.Uat, 2) + Math.Pow(averages.Uap, 2));
+
+                    var uptSOS = Math.Pow(utSOS * uncertaintyCertTemp, 2) + Math.Pow(upSOS * uncertaintyCertPres, 2);
+
+
+                    double uPurgado = 0.00075;
+                    double uImpurezas = 0.1;
+                    double uSosEst = 0.1;
+                    double uSosAGA = 0.1;
+
+                    soundReportResults.Add(new RopeResult()
+                    {
+                        Name = v.Name,
+                        Value = Utils.DecimalComplete(v.Value, 3),
+                        Uncertainty = Utils.DecimalComplete(Utils.CalculateUncertainty(averages.Ropes.Find(f => f.Name == v.Name).DeviationSoundSpeed,
+                        (1d / 100d), 10, 0, 0, 0, uptSOS, uPurgado, uImpurezas, uSosEst, uSosAGA), 3),
+                        Error = Utils.DecimalComplete(v.PercentError, 3)
+                    });
+                }
+
+                //percentErrResults.ForEach(v => soundReportResults.Add(new RopeResult()
+                //{
+                //    Name = v.Name,
+                //    Value = Utils.DecimalComplete(v.Value, 3),
+                //    Uncertainty = Utils.DecimalComplete(Utils.CalculateUncertainty(averages.Ropes.Find(f => f.Name == v.Name).DeviationSoundSpeed,
+                //        (1d / 100d), 10, 0, 0, 0, uvSOS), 3),
+                //    Error = Utils.DecimalComplete(v.PercentError, 3)
+                //}));
 
                 SoundSpeedResult soundSpeedResult = new SoundSpeedResult();
                 soundSpeedResult.AverageResults.AddRange(soundReportResults);

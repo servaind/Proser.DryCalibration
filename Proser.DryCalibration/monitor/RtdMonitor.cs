@@ -31,13 +31,18 @@ namespace Proser.DryCalibration.monitor
 
         public RtdMonitor(RtdTable calibration)
         {
+            // 19/12/2024-Por recomendacion del auditor dejaremos todo en 0.4
             var_errores.Add(6, 0.4);
             var_errores.Add(7, 0.4);
             var_errores.Add(8, 0.4);
-            var_errores.Add(9, 0.5);
-            var_errores.Add(10, 0.5);
-            var_errores.Add(11, 0.5);
-            var_errores.Add(12, 0.6);
+            var_errores.Add(9, 0.4);
+            var_errores.Add(10, 0.4);
+            var_errores.Add(11, 0.4);
+            var_errores.Add(12, 0.4);
+            //var_errores.Add(9, 0.5);
+            //var_errores.Add(10, 0.5);
+            //var_errores.Add(11, 0.5);
+            //var_errores.Add(12, 0.6);
 
             this.calibration = calibration;
             this.Type = enums.MonitorType.RTD;
@@ -175,8 +180,10 @@ namespace Proser.DryCalibration.monitor
                     monitorValue.CalibrationRTD.Maximum = (evaluateList.Count > 0)? evaluateList.Max(r => r.TempValue) : 0;
 
                     monitorValue.CalibrationRTD.Difference = (activeList.Count > 0)? Math.Abs(monitorValue.CalibrationRTD.Maximum - monitorValue.CalibrationRTD.Minimum) : -99;
-                    monitorValue.CalibrationRTD.Uncertainty = (activeList.Count > 0)?
-                        Math.Round(Utils.CalculateUncertainty(Utils.CalculateStandardDeviation(evaluateList.Select(r => r.TempValue).ToList()), (1 / 100), evaluateList.Count, UP_TEMP),3) : -99;
+                    //monitorValue.CalibrationRTD.Uncertainty = (activeList.Count > 0)?
+                    //    Math.Round(Utils.CalculateUncertainty(Utils.CalculateStandardDeviation(evaluateList.Select(r => r.TempValue).ToList()), (1 / 100), evaluateList.Count, UP_TEMP),3) : -99;
+                    monitorValue.CalibrationRTD.Uncertainty = (activeList.Count > 0) ?
+                        Math.Round(Utils.CalculateUncertainty(Utils.CalculateStandardDeviation(evaluateList.Select(r => r.TempValue).ToList()), Utils.CalculateUncertaintyRes(evaluateList.Count), evaluateList.Count, Utils.CalculateUncertaintyUP(evaluateList.Count)), 3) : -99;
 
                     //tempDifferenceHist.Add(monitorValue.CalibrationRTD.Uncertainty);
                     tempDifferenceHist.Add(monitorValue.CalibrationRTD.Difference);
@@ -193,7 +200,8 @@ namespace Proser.DryCalibration.monitor
                     monitorValue.EnvironmentRTD.Minimum = (environtmentList.Count > 0) ? environtmentList.Min(r => r.TempValue) : 0;
                     monitorValue.EnvironmentRTD.Maximum = (environtmentList.Count > 0) ? environtmentList.Max(r => r.TempValue) : 0;
                     monitorValue.EnvironmentRTD.Uncertainty = (environtmentList.Count > 0) ?
-                      Math.Round(Utils.CalculateUncertainty(Utils.CalculateStandardDeviation(environtmentList.Select(r => r.TempValue).ToList()), (1 / 100), environtmentList.Count, UP_TEMP), 3) : -99;
+                      Math.Round(
+                          Utils.CalculateUncertainty(Utils.CalculateStandardDeviation(environtmentList.Select(r => r.TempValue).ToList()), (1 / 100), environtmentList.Count, UP_TEMP), 3) : -99;
                     monitorValue.EnvironmentRTD.Difference = (environtmentList.Count > 0) ? Math.Abs(monitorValue.EnvironmentRTD.Maximum - monitorValue.EnvironmentRTD.Minimum) : -99;
 
                     Console.WriteLine("Ambiente:--------");

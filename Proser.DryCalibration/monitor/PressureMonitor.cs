@@ -91,7 +91,7 @@ namespace Proser.DryCalibration.monitor
                              maxRangeCurrent,// 02, //20 ma
                              AICurrentUnits.Amps);
 
-            task.Timing.ConfigureSampleClock("", 1.95, SampleClockActiveEdge.Rising, SampleQuantityMode.ContinuousSamples, 10);
+          task.Timing.ConfigureSampleClock("", 1.95, SampleClockActiveEdge.Rising, SampleQuantityMode.ContinuousSamples, 10);
 
             AnalogSingleChannelReader reader = new AnalogSingleChannelReader(task.Stream);    
 

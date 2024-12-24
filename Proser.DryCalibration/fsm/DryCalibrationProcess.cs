@@ -10,9 +10,13 @@ using Proser.DryCalibration.monitor.enums;
 using Proser.DryCalibration.monitor.statistic;
 using Proser.DryCalibration.Report;
 using Proser.DryCalibration.sensor.pressure.calibration;
+using Proser.DryCalibration.sensor.rtd.calibration;
 using Proser.DryCalibration.sensor.ultrasonic.enums;
+using Proser.DryCalibration.util;
 using System;
+using System.Linq;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Proser.DryCalibration.fsm
 {
@@ -33,6 +37,7 @@ namespace Proser.DryCalibration.fsm
         public ValidatedResult CurrentValidatedResults { get; private set; }
         public ReportModel CurrentReportModel { get; set; }
         public Sample CurrentAverages { get; private set; }
+        public List<Sample> CurrentSamples { get; set; }
 
         public UltSampMode UltrasonicSampleMode { get; set; }
         public PressureCalibration CurrentPressureCalibration { get; set; }
@@ -40,12 +45,14 @@ namespace Proser.DryCalibration.fsm
         private IController rtdController;
         private IController pressureController;
         private IController ultrasonicController;
+        private readonly double UP_PRESS;
 
         private UltrasonicModel ultrasonicModel;
         private bool DryCalibrationIsAborted;
 
         public DryCalibrationProcess(UltSampMode ultSampMode)
         {
+            UP_PRESS = 0.019;
           
             // rtd monitor
             rtdController = new RtdController();
@@ -96,7 +103,7 @@ namespace Proser.DryCalibration.fsm
                     {
                         ObtainingSampleState obtSampState = new ObtainingSampleState(rtdController,
                                                                                      pressureController,
-                                                                                     ultrasonicController); // CurrentReportModel.Header);
+                                                                                     ultrasonicController, UP_PRESS); // CurrentReportModel.Header);
 
                         obtSampState.ElapsedTimeControl += ObtainingSampleState_ElapsedTimeControl;
                         obtSampState.ObtainingSampleFinished += ObtSampState_ObtainingSampleFinished;
@@ -106,7 +113,7 @@ namespace Proser.DryCalibration.fsm
                     }
                     else
                     {
-                        ObtainingManualSampleState obtSampState = new ObtainingManualSampleState(rtdController, pressureController, ultrasonicModel);
+                        ObtainingManualSampleState obtSampState = new ObtainingManualSampleState(rtdController, pressureController, ultrasonicModel, UP_PRESS);
 
                         obtSampState.ElapsedTimeControl += ObtainingSampleState_ElapsedTimeControl;
                         obtSampState.ObtainingSampleFinished += ObtSampState_ObtainingSampleFinished;
@@ -122,13 +129,15 @@ namespace Proser.DryCalibration.fsm
                     if (UltrasonicSampleMode == UltSampMode.Automatic)
                     {
                         CurrentAverages = ((ObtainingSampleState)CurrentState).Averages;
+                        CurrentSamples = ((ObtainingSampleState)CurrentState).Samples;
                     }
                     else 
                     {
                         CurrentAverages = ((ObtainingManualSampleState)CurrentState).Averages;
+                        CurrentSamples = ((ObtainingManualSampleState)CurrentState).Samples;
                     }
-                    
-                    ValidatingState validatingState = new ValidatingState(CurrentAverages, CurrentPressureCalibration, ultrasonicModel);
+
+                    ValidatingState validatingState = new ValidatingState(CurrentAverages, CurrentPressureCalibration, ultrasonicModel, CurrentSamples);
              
                     validatingState.ValidatingStateReady += ValidatingState_ValidatingStateReady;
                     validatingState.ValidationFinished += ValidatingState_ValidationFinished;
@@ -136,10 +145,33 @@ namespace Proser.DryCalibration.fsm
                     this.CurrentState = validatingState;
                     break;
                 case FSMState.GENERATING_REPORT:
+                    Dictionary<int, double> var_errores = new Dictionary<int, double>();
+                    // 19/12/2024-Por recomendacion del auditor dejaremos todo en 0.4
+                    var_errores.Add(6, 0.4);
+                    var_errores.Add(7, 0.4);
+                    var_errores.Add(8, 0.4);
+                    var_errores.Add(9, 0.4);
+                    var_errores.Add(10, 0.4);
+                    var_errores.Add(11, 0.4);
+                    var_errores.Add(12, 0.4);
+                    //var_errores.Add(9, 0.5);
+                    //var_errores.Add(10, 0.5);
+                    //var_errores.Add(11, 0.5);
+                    //var_errores.Add(12, 0.6);
+
+                    string gradiente = "";
+                    string path = Path.Combine(Utils.ConfigurationPath, "RtdCalibration.xml");
+                    RtdTable rtdCal = RtdTable.Read(path);
+                    var cantidadRtd = rtdCal.RtdSensors.Where(x => x.Active.Equals(1)).Count();
+                    var valorError = var_errores[cantidadRtd];
+                    gradiente = valorError.ToString();
+
+                    CurrentSamples = ((ValidatingState)CurrentState).Samples;
+
                     GeneratingReportState generatingReportState = new GeneratingReportState(CurrentReportModel,
                                                                                            CurrentValidatedResults,
                                                                                            CurrentAverages,
-                                                                                           ultrasonicModel);
+                                                                                           ultrasonicModel, UP_PRESS, gradiente, CurrentSamples);
 
                     generatingReportState.GenerateReportSucceeded += GeneratingReportState_GenerateReportSucceeded;
                     this.CurrentState = generatingReportState;

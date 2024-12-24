@@ -47,8 +47,9 @@ namespace Proser.DryCalibration.sensor.ultrasonic.modbus.configuration
 
                 return fullPath;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return "";
             }
 
@@ -71,8 +72,9 @@ namespace Proser.DryCalibration.sensor.ultrasonic.modbus.configuration
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return "";
+                throw ex;
+                //Console.WriteLine(ex.Message);
+                //return "";
             }
         }
 

@@ -14,6 +14,7 @@ using Proser.DryCalibration.sensor.ultrasonic.modbus.configuration;
 using Proser.DryCalibration.sensor.ultrasonic.modbus.maps;
 using Proser.DryCalibration.util;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,6 +27,9 @@ namespace Proser.DryCalibration.fsm.states
 {
     public class ObtainingSampleState : IState, ITimerControl
     {
+        private static readonly ConcurrentDictionary<int, List<Rtd>> StaticTemperatureDetails = new ConcurrentDictionary<int, List<Rtd>>();
+
+        private readonly object objLock = new object();
         private const int SAMPLE_INTERVAL = 30000; // 30 segundos
 
         private readonly double UP_TEMP;
@@ -64,13 +68,14 @@ namespace Proser.DryCalibration.fsm.states
             this.Name = FSMState.OBTAINING_SAMPLES;
             this.Description = "Obteniendo muestras...";
 
-            this.UP_TEMP = 0.18;
-            this.UP_PRESS = 0.01;
+            this.UP_TEMP = 0.09;
+            //this.UP_PRESS = 0.019;
         }
 
-        public ObtainingSampleState(IController rtdController, IController pressureController, IController ultrasonicController)
+        public ObtainingSampleState(IController rtdController, IController pressureController, IController ultrasonicController, double up_press)
             : this()
         {
+            UP_PRESS = up_press;
             string path = Path.Combine(Utils.ConfigurationPath, "RtdCalibration.xml");
             RtdTable rtdCal = RtdTable.Read(path);
 
@@ -150,16 +155,43 @@ namespace Proser.DryCalibration.fsm.states
         {
             Averages = new Sample();
 
+
             Averages.CalibrationTemperature.Difference = Samples.Average(d => d.CalibrationTemperature.Difference);
             Averages.CalibrationTemperature.Value = Samples.Average(t => t.CalibrationTemperature.Value);
-            Averages.CalibrationTemperature.Uncertainty = Utils.CalculateUncertainty(
-                Utils.CalculateStandardDeviation(Samples.Select(s => s.CalibrationTemperature.Value).ToList()), (1d / 100d), (rtdCount * 10), UP_TEMP); 
+            //Averages.CalibrationTemperature.Uncertainty = Utils.CalculateUncertainty(
+            //    Utils.CalculateStandardDeviation(Samples.Select(s => s.CalibrationTemperature.Value).ToList()), (1d / 100d), (rtdCount * 10), UP_TEMP);
+
+            var resultadoMinMax = Utils.CalculateMinMaxRtd(Samples); // Obtenemos matriz min max por rtd
+            var udif = Utils.CalculateUDif(resultadoMinMax);
+
+            List<double> temperaturas = new List<double>();
+            foreach (var item in Samples)
+            {
+                int contador = 1;
+                foreach (var temperatura in item.TemperatureDetail)
+                {
+                    if (temperatura.TempValue != 0 && contador <= rtdCount)
+                    {
+                        temperaturas.Add(temperatura.TempValue);
+                    }
+                    contador = contador + 1;
+                }
+            }
+
+            //Averages.Uat = Utils.CalculateStandardDeviation(Samples.Select(s => s.CalibrationTemperature.Value).ToList()) / Math.Sqrt((rtdCount * 10));
+            //Averages.Uat = Utils.CalculateStandardDeviation(temperaturas) / Math.Sqrt((rtdCount * 10));
+            Averages.CalibrationTemperature.Uncertainty = Utils.CalculateUncertainty(Utils.CalculateStandardDeviation(temperaturas), Utils.CalculateUncertaintyRes(rtdCount), (rtdCount * 10), Utils.CalculateUncertaintyUP(rtdCount), udif);
+            //Averages.CalibrationTemperature.Uncertainty = Utils.CalculateUncertainty(
+            //    Utils.CalculateStandardDeviation(Samples.Select(s => s.CalibrationTemperature.Value).ToList()), Utils.CalculateUncertaintyRes(rtdCount), (rtdCount * 10), Utils.CalculateUncertaintyUP(rtdCount), udif);
+
+
 
             Averages.EnvirontmentTemperature.Difference = Samples.Average(d => d.EnvirontmentTemperature.Difference);
             Averages.EnvirontmentTemperature.Value = Samples.Average(t => t.EnvirontmentTemperature.Value);
             Averages.EnvirontmentTemperature.Uncertainty = Utils.CalculateUncertainty(
                 Utils.CalculateStandardDeviation(Samples.Select(s => s.EnvirontmentTemperature.Value).ToList()), (1d / 100d), (rtdEnvCount * 10), UP_TEMP);
 
+            Averages.Uap = Utils.CalculateStandardDeviation(Samples.Select(s => s.PressureValue).ToList()) / Math.Sqrt((10));
             Averages.PressureValue = Samples.Average(p => p.PressureValue);
             Averages.PressureUncertainty = Utils.CalculateUncertainty(
                 Utils.CalculateStandardDeviation(Samples.Select(s => s.PressureValue).ToList()), (1d / 100d), 10, UP_PRESS);
@@ -299,38 +331,70 @@ namespace Proser.DryCalibration.fsm.states
 
         public void AddCurrentSample(Sample sample)
         {
-            var match = Samples.Find(f => f.Number == sample.Number);
 
-            if (match == null)
+            lock (objLock)
             {
-                Sample s = new Sample()
-                {
-                    CalibrationTemperature = sample.CalibrationTemperature,
-                    EnvirontmentTemperature = sample.EnvirontmentTemperature,
-                    Number = sample.Number,
-                    PressureValue = sample.PressureValue,
-                };
+                var match = Samples.Find(f => f.Number == sample.Number);
 
-                s.TemperatureDetail.AddRange(sample.TemperatureDetail);
-
-                foreach (RopeValue r in sample.Ropes)
+                if (match == null)
                 {
-                    RopeValue rv = new RopeValue()
+                    var clonedDetails = sample.TemperatureDetail
+                        .Select(detail => new Rtd(detail.Number, detail.ResPoints, 100)
+                        {
+                            TempValue = detail.TempValue,
+                            ValueObtained = detail.ValueObtained
+                        }).ToList();
+
+                    StaticTemperatureDetails[sample.Number] = clonedDetails;
+
+                    Sample s = new Sample()
                     {
-                        DeviationFlowSpeed = r.DeviationFlowSpeed,
-                        DeviationSoundSpeed = r.DeviationSoundSpeed,
-                        EfficiencyValue = r.EfficiencyValue,
-                        GainValues = new GainValue() { T1 = r.GainValues.T1, T2 = r.GainValues.T2 },
-                        FlowSpeedValue = r.FlowSpeedValue,
-                        Name = r.Name,
-                        SoundSpeedValue = r.SoundSpeedValue
+                        CalibrationTemperature = sample.CalibrationTemperature,
+                        EnvirontmentTemperature = sample.EnvirontmentTemperature,
+                        Number = sample.Number,
+                        PressureValue = sample.PressureValue,
+                        TemperatureDetail = clonedDetails
                     };
 
-                    s.Ropes.Add(rv);
-                }
 
-                Samples.Add(s);            
-            }   
+                    //s.TemperatureDetail.AddRange(sample.TemperatureDetail);
+//                    foreach (var detail in sample.TemperatureDetail)
+//                    {
+//#if DEBUG
+//                        s.TemperatureDetail.Add(new Rtd(detail.Number, detail.TempValue)
+//                        {
+//                            ResPoints = detail.ResPoints,
+//                            ValueObtained = detail.ValueObtained
+//                        });
+//#else
+//                        s.TemperatureDetail.Add(new Rtd(detail.Number, detail.ResPoints, 100)
+//                        {
+//                            TempValue = detail.TempValue,
+//                            ValueObtained = detail.ValueObtained
+//                        });
+//#endif
+//                    }
+
+
+                    foreach (RopeValue r in sample.Ropes)
+                    {
+                        RopeValue rv = new RopeValue()
+                        {
+                            DeviationFlowSpeed = r.DeviationFlowSpeed,
+                            DeviationSoundSpeed = r.DeviationSoundSpeed,
+                            EfficiencyValue = r.EfficiencyValue,
+                            GainValues = new GainValue() { T1 = r.GainValues.T1, T2 = r.GainValues.T2 },
+                            FlowSpeedValue = r.FlowSpeedValue,
+                            Name = r.Name,
+                            SoundSpeedValue = r.SoundSpeedValue
+                        };
+
+                        s.Ropes.Add(rv);
+                    }
+
+                    Samples.Add(s);
+                }
+            }
         }
 
         private static Mutex mutex = new Mutex();
@@ -402,7 +466,8 @@ namespace Proser.DryCalibration.fsm.states
 
         public List<Rtd> TemperatureDetail { get; set; }
         public List<RopeValue> Ropes { get; set; }
-
+        public double Uat { get; set; }
+        public double Uap { get; set; }
 
         public Sample()
         {

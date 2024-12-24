@@ -14,12 +14,14 @@ namespace Proser.DryCalibration.sensor.rtd
         public int Number { get; private set; }
         public string AI { get; private set; }
         public int Module { get; private set; }
-        public double TempValue { get; private set; }
+        public double TempValue { get; set; }
         public double RealResValue { get; private set; }
         public List<ResPoint> ResPoints { get; set; }
         public bool Active { get; internal set; }
         public bool ValueObtained { get; set; }
         public double R0 { get; internal set; }
+        public double Min { get; set; }
+        public double Max { get; set; }
 
 #if DEBUG
 
@@ -27,7 +29,7 @@ namespace Proser.DryCalibration.sensor.rtd
         {
             Number = number;
             TempValue = value;
-            
+
         }
 
 #endif

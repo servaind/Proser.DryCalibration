@@ -60,7 +60,7 @@ namespace Proser.DryCalibration.App.mainapp
             }
             catch (MonitorInitializationException e)
             {
-                StatusMessage("Ocurrió un error al iniciar el monitor de temperatura.");
+                StatusMessage("Ocurrió un error al iniciar el monitor de temperatura." + e.Message);
 
                 log.Log.WriteIfExists("Ocurrió un error al iniciar el monitor de temperatura.", e);
 

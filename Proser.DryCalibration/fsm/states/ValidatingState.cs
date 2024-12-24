@@ -41,9 +41,11 @@ namespace Proser.DryCalibration.fsm.states
         
         public Sample Averages { get; private set; }
 
+        public List<Sample> Samples { get; set; }
+
         public bool ValidationComplete { get; set; }
 
-        public ValidatingState(Sample averages, PressureCalibration pressureCalibration, UltrasonicModel ultrasonicModel)
+        public ValidatingState(Sample averages, PressureCalibration pressureCalibration, UltrasonicModel ultrasonicModel, List<Sample> Samples)
         {
             Averages = averages; // promedios de todas las muestras obtenidas
             token = new CancellationTokenSource();
@@ -51,6 +53,7 @@ namespace Proser.DryCalibration.fsm.states
             this.Description = "Validando el ensayo...";
             this.pressureCalibration = pressureCalibration;
             this.ultrasonicModel = ultrasonicModel;
+            this.Samples = Samples;
         }
 
         public void Execute()
@@ -234,7 +237,8 @@ namespace Proser.DryCalibration.fsm.states
                 {
                     Name = rope.Name,
                     ValidationType = ValidationType.FlowAvg,
-                    Value = Math.Abs(flowSpeed),
+                    //Value = Math.Abs(flowSpeed),
+                    Value = flowSpeed,
                     Success = Math.Abs(flowSpeed) <= FLOW_ERROR
                 };
 

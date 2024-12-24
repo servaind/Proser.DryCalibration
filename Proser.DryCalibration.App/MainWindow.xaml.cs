@@ -353,6 +353,8 @@ namespace Proser.DryCalibration.App
             }
             catch (Exception ex)
             {
+                SetTextBlock(Status, ex.Message);
+
                 //log
                 log.Log.WriteIfExists("Ocurrió un error al configurar el dispositivo ultrasónico. Se guardará la configuración por defecto.");
                 log.Log.WriteIfExists(ex.Message, ex);
@@ -653,7 +655,8 @@ namespace Proser.DryCalibration.App
             }
             catch (Exception ex)
             {
-                SetTextBlock(Status, "Ocurrió un error al configurar los sensores de temperatura");
+                SetTextBlock(Status, ex.Message);
+                //SetTextBlock(Status, "Ocurrió un error al configurar los sensores de temperatura" + ex.Message);
 
                 //log
                 log.Log.WriteIfExists("Ocurrió un error al configurar los sensores de temperatura.");
@@ -2305,6 +2308,10 @@ namespace Proser.DryCalibration.App
                     {
                         SetSampleModeEdition(sampleNumber, ultrasonicModel, true);
                         UpdateSampleValues(sampleNumber, ultrasonicModel);
+                    }
+                    else
+                    {
+                        UpdateSampleValues(11, ultrasonicModel);
                     }
                 }
                        

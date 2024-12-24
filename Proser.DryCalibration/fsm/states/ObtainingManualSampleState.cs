@@ -56,12 +56,13 @@ namespace Proser.DryCalibration.fsm.states
             this.Description = "Obteniendo muestras...";
 
             this.UP_TEMP = 0.18;
-            this.UP_PRESS = 0.01;
+            //this.UP_PRESS = 0.019;
         }
 
-        public ObtainingManualSampleState(IController rtdController, IController pressureController, UltrasonicModel ultrasonicModel )
+        public ObtainingManualSampleState(IController rtdController, IController pressureController, UltrasonicModel ultrasonicModel, double up_press)
             : this()
         {
+            UP_PRESS = up_press;
             this.rtdController = rtdController;
             this.pressureController = pressureController;
             this.ultrasonicModel = ultrasonicModel;
@@ -116,16 +117,26 @@ namespace Proser.DryCalibration.fsm.states
         {
             Averages = new Sample();
 
+            var rtdCount = (Samples.Any() ? Samples.First().TemperatureDetail.Count() : 0);
+
             Averages.CalibrationTemperature.Difference = Samples.Average(d => d.CalibrationTemperature.Difference);
             Averages.CalibrationTemperature.Value = Samples.Average(t => t.CalibrationTemperature.Value);
+            //Averages.CalibrationTemperature.Uncertainty = Utils.CalculateUncertainty(
+            //    Utils.CalculateStandardDeviation(Samples.Select(s => s.CalibrationTemperature.Value).ToList()), (1d / 100d), 10, UP_TEMP);
+
+            var resultadoMinMax = Utils.CalculateMinMaxRtd(Samples); // Obtenemos matriz min max por rtd
+            var udif = Utils.CalculateUDif(resultadoMinMax);
+
+            Averages.Uat = Utils.CalculateStandardDeviation(Samples.Select(s => s.CalibrationTemperature.Value).ToList()) / Math.Sqrt((rtdCount * 10));
             Averages.CalibrationTemperature.Uncertainty = Utils.CalculateUncertainty(
-                Utils.CalculateStandardDeviation(Samples.Select(s => s.CalibrationTemperature.Value).ToList()), (1d / 100d), 10, UP_TEMP);
+                Utils.CalculateStandardDeviation(Samples.Select(s => s.CalibrationTemperature.Value).ToList()), Utils.CalculateUncertaintyRes(rtdCount), (rtdCount * 10), Utils.CalculateUncertaintyUP(rtdCount), udif);
 
             Averages.EnvirontmentTemperature.Difference = Samples.Average(d => d.EnvirontmentTemperature.Difference);
             Averages.EnvirontmentTemperature.Value = Samples.Average(t => t.EnvirontmentTemperature.Value);
             Averages.EnvirontmentTemperature.Uncertainty = Utils.CalculateUncertainty(
                 Utils.CalculateStandardDeviation(Samples.Select(s => s.EnvirontmentTemperature.Value).ToList()), (1d / 100d), 10, UP_TEMP);
 
+            Averages.Uap = Utils.CalculateStandardDeviation(Samples.Select(s => s.PressureValue).ToList()) / Math.Sqrt((10));
             Averages.PressureValue = Samples.Average(p => p.PressureValue);
             Averages.PressureUncertainty = Utils.CalculateUncertainty(
                 Utils.CalculateStandardDeviation(Samples.Select(s => s.PressureValue).ToList()), (1d / 100d), 10, UP_PRESS);

@@ -10,6 +10,13 @@ using System.Text;
 
 namespace Proser.DryCalibration.util
 {
+    public class MinMax
+    {
+        public double Minimo { get; set; }
+        public double Maximo { get; set; }
+        public double Diferencia { get; set; }
+    }
+
     public class Utils
     {
         public static string ConfigurationPath
@@ -67,15 +74,169 @@ namespace Proser.DryCalibration.util
             return deviation;
         }
 
-        public static double CalculateUncertainty(double deviation, double resolution, int n = 10, double Up = 0, double uSOS = 0)
+        public static Dictionary<int, MinMax> CalculateMinMaxRtd(List<Sample> samples)
+        {
+            var resultado = new Dictionary<int, MinMax>();
+            int rtdCount = samples[0].TemperatureDetail.Count();
+
+            double minValue = 999999;
+            double maxValue = -999999;
+
+            for (int i = 0; i < rtdCount; i++) // Recorro rtds
+            {
+  
+                for (int j = 0; j < samples.Count; j++)
+                {
+                    var tempValue = samples[j].TemperatureDetail[i].TempValue;
+                    if (tempValue < minValue)
+                    {
+                        minValue = tempValue;
+                    }
+                    if (tempValue > maxValue)
+                    {
+                        maxValue = tempValue;
+                    }
+                }
+                resultado.Add(i + 1, new MinMax() { Minimo = minValue, Maximo = maxValue });
+            }
+
+            return resultado;
+
+            /*
+
+            for (int i = 0; i < rtdCount; i++) // Recorro rtds
+            {
+                double minValue = 999999;
+                double maxValue = -999999;
+
+                for (int j = 0; j < samples.Count; j++)
+                {
+                    var tempValue = samples[j].TemperatureDetail[i].TempValue;
+                    if (tempValue < minValue)
+                    {
+                        minValue = tempValue;
+                    }
+                    if (tempValue > maxValue)
+                    {
+                        maxValue = tempValue;
+                    }
+                }
+                resultado.Add(i + 1, new MinMax() { Minimo = minValue, Maximo = maxValue });
+            }
+
+            foreach (var key in resultado.Keys)
+            {
+                resultado[key].Diferencia = resultado[key].Maximo - resultado[key].Minimo;
+            }
+         
+            return resultado;
+            */
+        }
+
+        public static double CalculateUncertainty(double deviation, double resolution, int n = 10, double Up = 0, double udif = 0, double uSOS = 0, double uptSOS = 0, 
+            double uPurgado = 0, double uImpurezas = 0, double uSosEst = 0, double uSosAGA = 0)
         {
             double Ua = deviation / Math.Sqrt(n);
             double Ures = resolution / (2 * Math.Sqrt(3));
-            double Ucomb = Math.Sqrt(Math.Pow(Ua, 2) + Math.Pow(Ures, 2) + Math.Pow(Up,2) + Math.Pow(uSOS,2));
+            double Ucomb = Math.Sqrt(Math.Pow(Ua, 2) + Math.Pow(Ures, 2) + Math.Pow(Up,2) + Math.Pow(udif, 2) + Math.Pow(uSOS,2) + Math.Pow(uptSOS, 2)
+                + Math.Pow(uPurgado, 2) + Math.Pow(uImpurezas, 2) + Math.Pow(uSosEst, 2) + Math.Pow(uSosAGA, 2)
+                ) 
+                ;
             double U = 2 * Ucomb;
+
 
             return U;
         }
+
+        public static double CalculateUncertaintyUP(int rtdCount)
+        {
+            Dictionary<short, double> uptbl = new Dictionary<short, double>();
+            uptbl.Add(1, 0.09);
+            uptbl.Add(2, 0.09);
+            uptbl.Add(3, 0.09);
+            uptbl.Add(4, 0.09);
+            uptbl.Add(5, 0.09);
+            uptbl.Add(6, 0.09);
+            uptbl.Add(7, 0.09);
+            uptbl.Add(8, 0.09);
+            uptbl.Add(9, 0.09);
+            uptbl.Add(10, 0.09);
+
+            Dictionary<short, double> uprtd = new Dictionary<short, double>();
+            for (short i = 1; i <= rtdCount; i++)
+            {
+                uprtd.Add(i, uptbl[i] / 2);
+            }
+
+            double uncertaintyCert = 0.00;
+            foreach (var key in uprtd.Keys)
+            {
+                uncertaintyCert += Math.Pow(uprtd[key], 2);
+            }
+
+            uncertaintyCert = Math.Sqrt(uncertaintyCert);
+            return uncertaintyCert;
+        }
+
+        public static double CalculateUDif(Dictionary<int, MinMax> minmax)
+        {
+            /*
+            foreach (var key in minmax.Keys)
+            {
+                udif += Math.Pow(minmax[key].Diferencia, 2);
+            }
+            */
+            double udif = 0.00;
+            double minValue = 999999;
+            double maxValue = -999999;
+
+            for (int i = 1; i <= minmax.Count; i++)
+            {
+
+                var tempMin = minmax[i].Minimo;
+                var tempMax = minmax[i].Maximo;
+
+                if (tempMin < minValue && tempMin != 0.00)
+                {
+                    minValue = tempMin;
+                }
+                if (tempMax > maxValue && tempMax != 0.00)
+                {
+                    maxValue = tempMax;
+                }
+            }
+            udif = maxValue - minValue;
+            //udif = Math.Pow(udif, 2);
+            //udif = Math.Sqrt(udif);
+            udif = udif/Math.Sqrt(3);
+            return udif;
+        }
+
+
+        public static double CalculateUncertaintyRes(int rtdCount)
+        {
+            Dictionary<short, double> restbl = new Dictionary<short, double>();
+            restbl.Add(1, 0.01);
+            restbl.Add(2, 0.01);
+            restbl.Add(3, 0.01);
+            restbl.Add(4, 0.01);
+            restbl.Add(5, 0.01);
+            restbl.Add(6, 0.01);
+            restbl.Add(7, 0.01);
+            restbl.Add(8, 0.01);
+            restbl.Add(9, 0.01);
+            restbl.Add(10, 0.01);
+
+            Dictionary<short, double> resrtd = new Dictionary<short, double>();
+            for (short i = 1; i <= rtdCount; i++)
+            {
+                resrtd.Add(i, restbl[i]);
+            }
+
+            var uncertaintyCertRes = resrtd.Average(x => x.Value);
+            return uncertaintyCertRes;
+        }
+
 
         public static string MakeCsv(List<Sample> samples, Sample averages, EnvironmentalCondition environmentalCondition, UltrasonicModel ultrasonicModel, int processDuration)
         {

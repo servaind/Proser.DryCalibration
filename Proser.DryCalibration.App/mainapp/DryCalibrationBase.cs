@@ -214,6 +214,9 @@ namespace Proser.DryCalibration.App.mainapp
 
             string currentPressureSensorType = CurrentPressureCalibration.SensorType == 0 ? "A" : "";
 
+            var rtdCount = RtdVal.Rtds.Where(x => x.Active).Count();
+
+
             ((GeneratingReportState)CurrentState).GenerateReport(calibrationMeasuring, CurrentSecondsTimeProcess, currentPressureSensorType);
         }
 
@@ -1668,6 +1671,7 @@ namespace Proser.DryCalibration.App.mainapp
 
             //comprobar máscara
             string pressureValue = ((txtConfig[16].Text).Replace("_", "") == "") ? "" : txtConfig[16].Text;
+            pressureValue = pressureValue.Replace(",", ".");
 
             if (string.IsNullOrEmpty(pressureValue))
             {
